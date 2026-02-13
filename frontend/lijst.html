@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Woordenlijst - Leerbot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1 id="lijstNaam">Woordenlijst</h1>
+        <div>
+            <span id="username"></span>
+            <button onclick="logout()">Uitloggen</button>
+            <button onclick="window.location='dashboard.html'">← Terug</button>
+        </div>
+    </header>
+    <main>
+        <div class="card">
+            <h3>➕ Nieuw woord</h3>
+            <input type="text" id="bronWoord" placeholder="Bijv. la maison">
+            <input type="text" id="doelWoord" placeholder="Bijv. het huis">
+            <button id="voegWoordBtn">Toevoegen</button>
+        </div>
+        <div id="woordenContainer"></div>
+        <button onclick="window.location='oefen.html?id='+getLijstId()" style="margin-top:20px;">🎴 Start oefenen</button>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script src="lijst.js"></script>
+</body>
+</html>

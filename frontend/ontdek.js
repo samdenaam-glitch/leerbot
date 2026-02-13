@@ -93,7 +93,7 @@ async function kopieerLijst(sharedListId, token) {
 }
 
 async function toonWoorden(sharedListId, token) {
-  const res = await fetch(`/api/shared-lists/${sharedListId}`, {
+  const res = await fetch(`/api/shared-list?id=${sharedListId}`, {
     headers: { 'Authorization': `Bearer ${token}` }
   })
   if (!res.ok) {

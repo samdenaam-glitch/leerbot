@@ -1,6 +1,6 @@
 // Vervang door jouw Supabase-gegevens!
-const SUPABASE_URL = 'https://jouwproject.supabase.co'
-const SUPABASE_ANON_KEY = 'jouw-anon-key'
+const SUPABASE_URL = 'https://xxgebftpfslkucdkbila.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4Z2ViZnRwZnNsa3VjZGtiaWxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5ODMxMDYsImV4cCI6MjA4NjU1OTEwNn0.RLpbmLzwtlxXRPrp24NFB2ai1Cb0bxnKLpsEGC_NxIc'
 const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // Controleer sessie bij laden

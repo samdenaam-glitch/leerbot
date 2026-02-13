@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Leerbot beheer</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Extra admin-specifieke styling (kan later in style.css) */
+        .admin-section {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        .woord-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        .woord-item button {
+            padding: 5px 10px;
+            font-size: 0.9em;
+        }
+        .lijst-beheer {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🛠️ Admin-paneel</h1>
+        <div>
+            <span id="username"></span>
+            <button onclick="logout()">Uitloggen</button>
+            <button onclick="window.location='dashboard.html'">Naar dashboard</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="admin-section">
+            <h2>➕ Nieuwe voorbeeldlijst</h2>
+            <form id="newListForm">
+                <input type="text" id="listName" placeholder="Naam (bijv. Engels Vakantie)" required>
+                <input type="text" id="listDescription" placeholder="Beschrijving (optioneel)">
+                <select id="listLanguage" required>
+                    <option value="">Kies taal</option>
+                    <option value="en">Engels</option>
+                    <option value="fr">Frans</option>
+                    <option value="de">Duits</option>
+                </select>
+                <select id="listLevel">
+                    <option value="">Niveau (optioneel)</option>
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="B1">B1</option>
+                </select>
+                <button type="submit">Lijst aanmaken</button>
+            </form>
+        </div>
+
+        <div class="admin-section">
+            <h2>📋 Bestaande voorbeeldlijsten</h2>
+            <div id="listsContainer"></div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

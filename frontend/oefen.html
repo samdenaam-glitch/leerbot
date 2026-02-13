@@ -4,27 +4,36 @@
     <meta charset="UTF-8">
     <title>Oefenen - Leerbot</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>🎴 Oefenen</h1>
-        <div>
-            <span id="username"></span>
-            <button onclick="logout()">Uitloggen</button>
-            <button onclick="window.location='lijst.html?id='+getLijstId()">← Naar lijst</button>
-        </div>
-    </header>
-    <main>
-        <div id="card" class="flashcard" onclick="draaiKaart()">
-            <div id="voorkant">Klik om te beginnen</div>
-            <div id="achterkant" style="display:none;"></div>
-        </div>
-        <div style="display:flex; justify-content:center; gap:20px;">
-            <button onclick="vorigeKaart()">← Vorige</button>
-            <button onclick="volgendeKaart()">Volgende →</button>
-        </div>
-        <p id="teller"></p>
-    </main>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">📚 Leerbot</a>
+            <div class="nav-links">
+                <span class="user-email" id="username"></span>
+                <a href="lijst.html?id='+getLijstId()+'" class="btn outline small">← Lijst</a>
+                <button onclick="logout()" class="btn outline small">Uitloggen</button>
+            </div>
+        </header>
+
+        <main>
+            <h1>🎴 Oefenen</h1>
+
+            <div class="flashcard" onclick="draaiKaart()">
+                <div id="voorkant" class="active">Klik om te beginnen</div>
+                <div id="achterkant" class="back"></div>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 20px; margin: 20px 0;">
+                <button onclick="vorigeKaart()" class="btn outline small">← Vorige</button>
+                <button onclick="volgendeKaart()" class="btn outline small">Volgende →</button>
+            </div>
+
+            <p id="teller" style="text-align: center; font-weight: 600;"></p>
+        </main>
+    </div>
+
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
     <script src="oefen.js"></script>

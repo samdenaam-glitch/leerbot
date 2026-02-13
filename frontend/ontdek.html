@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Ontdek voorbeeldlijsten - Leerbot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🌟 Ontdek voorbeeldlijsten</h1>
+        <div>
+            <span id="username"></span>
+            <button onclick="logout()">Uitloggen</button>
+            <button onclick="window.location='dashboard.html'">← Mijn lijsten</button>
+        </div>
+    </header>
+    <main>
+        <div class="filters">
+            <label for="taalFilter">Taal:</label>
+            <select id="taalFilter">
+                <option value="">Alle talen</option>
+                <option value="en">Engels</option>
+                <option value="fr">Frans</option>
+                <option value="de">Duits</option>
+            </select>
+
+            <label for="niveauFilter">Niveau:</label>
+            <select id="niveauFilter">
+                <option value="">Alle niveaus</option>
+                <option value="A1">A1 (beginner)</option>
+                <option value="A2">A2 (vervolg)</option>
+            </select>
+
+            <button id="filterBtn">Filteren</button>
+        </div>
+
+        <div id="lijstenContainer" class="lijsten-grid"></div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script src="ontdek.js"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 // Vervang door jouw Supabase-gegevens!
-const SUPABASE_URL = 'https://xxgebftpfslkucdkbila.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh4Z2ViZnRwZnNsa3VjZGtiaWxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5ODMxMDYsImV4cCI6MjA4NjU1OTEwNn0.RLpbmLzwtlxXRPrp24NFB2ai1Cb0bxnKLpsEGC_NxIc'
-window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL = 'https://jouwproject.supabase.co'
+const SUPABASE_ANON_KEY = 'jouw-anon-key'
+const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // Controleer sessie bij laden
 window.addEventListener('load', async () => {
@@ -19,7 +19,7 @@ async function login() {
   const ww = prompt('Je wachtwoord:')
   if (!email || !ww) return
   const { error } = await supabase.auth.signInWithPassword({ email, password: ww })
-  if (error) alert('Fout: ' + error.message)
+  if (error) showToast('Fout: ' + error.message, 'error')
   else location.reload()
 }
 
@@ -33,8 +33,8 @@ async function registreer() {
     password: ww,
     options: { data: { username: email.split('@')[0] } }
   })
-  if (error) alert('Fout: ' + error.message)
-  else alert('Account gemaakt! Check je e-mail om te bevestigen (kan in spam zijn).')
+  if (error) showToast('Fout: ' + error.message, 'error')
+  else showToast('Account gemaakt! Check je e-mail om te bevestigen (kan in spam zijn).', 'success')
 }
 
 // Uitloggen
@@ -59,6 +59,18 @@ function toonUitgelogd() {
   if (authDiv) authDiv.style.display = 'block'
   if (userDiv) userDiv.style.display = 'none'
 }
+
+// Toast notificaties
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+window.showToast = showToast;
 
 // Globale functies beschikbaar maken (voor onclick in HTML)
 window.login = login

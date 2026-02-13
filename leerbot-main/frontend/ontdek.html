@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Ontdek voorbeeldlijsten - Leerbot</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">📚 Leerbot</a>
+            <div class="nav-links">
+                <span class="user-email" id="username"></span>
+                <a href="dashboard.html" class="btn outline small">Mijn lijsten</a>
+                <button onclick="logout()" class="btn outline small">Uitloggen</button>
+            </div>
+        </header>
+
+        <main>
+            <h1>🌟 Ontdek voorbeeldlijsten</h1>
+
+            <div class="filters">
+                <label for="taalFilter">Taal:</label>
+                <select id="taalFilter">
+                    <option value="">Alle talen</option>
+                    <option value="en">Engels</option>
+                    <option value="fr">Frans</option>
+                    <option value="de">Duits</option>
+                </select>
+
+                <label for="niveauFilter">Niveau:</label>
+                <select id="niveauFilter">
+                    <option value="">Alle niveaus</option>
+                    <option value="A1">A1 (beginner)</option>
+                    <option value="A2">A2 (vervolg)</option>
+                </select>
+
+                <button id="filterBtn" class="btn small">Filteren</button>
+            </div>
+
+            <div id="lijstenContainer" class="grid"></div>
+        </main>
+
+        <!-- Modal -->
+        <div id="woordModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Woorden in deze lijst</h3>
+                <div id="modalWoordenLijst"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script src="ontdek.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account maken - Leerbot</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">📚 Leerbot <span>NL</span></a>
+            <div class="nav-links">
+                <a href="login.html" class="btn outline small">Inloggen</a>
+            </div>
+        </header>
+
+        <main style="max-width: 500px; margin: 0 auto;">
+            <div class="card" style="text-align: center;">
+                <div class="mascot">🦉</div>
+                <h1 style="color: var(--primary);">Word een taalheld!</h1>
+                <p style="margin-bottom: 30px;">Maak gratis een account aan.</p>
+
+                <form id="registerForm" style="text-align: left;">
+                    <div style="margin-bottom: 20px;">
+                        <label style="font-weight: 600; display: block; margin-bottom: 8px;">E-mailadres</label>
+                        <input type="email" id="email" placeholder="naam@voorbeeld.nl" required style="width:100%; padding:16px; border-radius:60px; border:2px solid var(--primary-light); background:var(--bg); color:var(--text); font-size:16px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="font-weight: 600; display: block; margin-bottom: 8px;">Wachtwoord (min. 6 tekens)</label>
+                        <input type="password" id="password" placeholder="••••••••" required minlength="6" style="width:100%; padding:16px; border-radius:60px; border:2px solid var(--primary-light); background:var(--bg); color:var(--text); font-size:16px;">
+                    </div>
+                    <div style="margin-bottom: 30px;">
+                        <label style="font-weight: 600; display: block; margin-bottom: 8px;">Bevestig wachtwoord</label>
+                        <input type="password" id="confirmPassword" placeholder="••••••••" required minlength="6" style="width:100%; padding:16px; border-radius:60px; border:2px solid var(--primary-light); background:var(--bg); color:var(--text); font-size:16px;">
+                    </div>
+                    <button type="submit" class="btn" style="width:100%; font-size:18px;">Gratis account maken</button>
+                </form>
+
+                <p style="margin-top: 30px;">
+                    Heb je al een account? <a href="login.html" style="color: var(--primary); font-weight: 700;">Log in</a>
+                </p>
+                <p>
+                    <a href="index.html" style="color: var(--text-light);">← Terug naar home</a>
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+
+            if (password !== confirm) {
+                showToast('Wachtwoorden komen niet overeen', 'error');
+                return;
+            }
+
+            try {
+                const { error } = await supabase.auth.signUp({ 
+                    email, 
+                    password,
+                    options: { data: { username: email.split('@')[0] } }
+                });
+                if (error) {
+                    showToast('Fout: ' + error.message, 'error');
+                } else {
+                    showToast('Account gemaakt! Check je e-mail om te bevestigen.', 'success');
+                    setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+                }
+            } catch (e) {
+                showToast('Fout bij registreren: ' + e.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

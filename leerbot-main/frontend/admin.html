@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Leerbot</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">📚 Leerbot</a>
+            <div class="nav-links">
+                <span class="user-email" id="username"></span>
+                <a href="dashboard.html" class="btn outline small">← Dashboard</a>
+                <button onclick="logout()" class="btn outline small">Uitloggen</button>
+            </div>
+        </header>
+
+        <main>
+            <h1>🛠️ Admin-paneel</h1>
+
+            <div class="card">
+                <h2>Statistieken</h2>
+                <div id="statsContainer" class="stats-grid">
+                    <p>Laden...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!session) {
+                window.location.href = 'index.html'
+                return
+            }
+            document.getElementById('username').textContent = session.user.email
+
+            try {
+                const res = await fetch('/api/admin/stats', {
+                    headers: { 'Authorization': `Bearer ${session.access_token}` }
+                })
+                if (!res.ok) {
+                    if (res.status === 403) {
+                        document.getElementById('statsContainer').innerHTML = '<p>❌ Geen toegang tot admin-paneel.</p>'
+                    } else {
+                        document.getElementById('statsContainer').innerHTML = '<p>Fout bij laden van statistieken.</p>'
+                    }
+                    return
+                }
+                const stats = await res.json()
+                document.getElementById('statsContainer').innerHTML = `
+                    <div class="stat-card"><span class="number">${stats.users}</span><div class="label">Gebruikers</div></div>
+                    <div class="stat-card"><span class="number">${stats.lists}</span><div class="label">Eigen lijsten</div></div>
+                    <div class="stat-card"><span class="number">${stats.words}</span><div class="label">Eigen woorden</div></div>
+                    <div class="stat-card"><span class="number">${stats.sharedLists}</span><div class="label">Voorbeeldlijsten</div></div>
+                    <div class="stat-card"><span class="number">${stats.sharedWords}</span><div class="label">Voorbeeldwoorden</div></div>
+                `
+            } catch (error) {
+                document.getElementById('statsContainer').innerHTML = '<p>Fout bij laden.</p>'
+            }
+        })
+    </script>
+</body>
+</html>

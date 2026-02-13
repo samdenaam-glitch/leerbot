@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Oefenen - Leerbot</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">📚 Leerbot</a>
+            <div class="nav-links">
+                <span class="user-email" id="username"></span>
+                <a href="javascript:history.back()" class="btn outline small">← Lijst</a>
+                <button onclick="logout()" class="btn outline small">Uitloggen</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Gamification stats bovenaan -->
+            <div class="game-stats">
+                <div class="stat-item">
+                    <span class="stat-icon">⭐</span>
+                    <span class="stat-label">XP</span>
+                    <span class="stat-value" id="xpDisplay">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">📊</span>
+                    <span class="stat-label">Level</span>
+                    <span class="stat-value" id="levelDisplay">1</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🔥</span>
+                    <span class="stat-label">Streak</span>
+                    <span class="stat-value" id="streakDisplay">0</span>
+                </div>
+            </div>
+
+            <h1>🎴 Oefen je woorden</h1>
+
+            <!-- Voortgang binnen deze sessie -->
+            <div class="session-progress">
+                <span id="progressText">0 / 0 woorden</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Flashcard met animatie -->
+            <div class="flashcard" id="flashcard" onclick="draaiKaart()">
+                <div id="voorkant" class="active">Klik om te beginnen</div>
+                <div id="achterkant" class="back"></div>
+            </div>
+
+            <!-- Antwoordknoppen -->
+            <div class="answer-buttons">
+                <button id="foutBtn" class="btn answer-btn wrong">
+                    <span class="emoji">❌</span> Fout
+                </button>
+                <button id="goedBtn" class="btn answer-btn correct">
+                    <span class="emoji">✅</span> Goed
+                </button>
+            </div>
+
+            <!-- Navigatieknoppen (optioneel, maar handig) -->
+            <div class="nav-buttons">
+                <button onclick="vorigeKaart()" class="btn outline small">← Vorige</button>
+                <span id="teller" class="counter">0 / 0</span>
+                <button onclick="volgendeKaart()" class="btn outline small">Volgende →</button>
+            </div>
+
+            <!-- Einde sessie modal -->
+            <div id="sessieModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Sessie voltooid! 🎉</h2>
+                    <div class="sessie-stats">
+                        <p>Goed: <span id="sessieGoed">0</span></p>
+                        <p>Fout: <span id="sessieFout">0</span></p>
+                        <p>Totaal XP: <span id="sessieXP">0</span></p>
+                    </div>
+                    <div class="sessie-actions">
+                        <button onclick="window.location.reload()" class="btn">Opnieuw</button>
+                        <button onclick="window.location='lijst.html?id='+getLijstId()" class="btn outline">Naar lijst</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script src="oefen.js"></script>
+</body>
+</html>

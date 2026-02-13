@@ -1,4 +1,4 @@
-// ========== GLOBALE FUNCTIE (direct beschikbaar) ==========
+// ========== GLOBALE FUNCTIE ==========
 window.getLijstId = function() {
   if (window._lijstId) return window._lijstId;
   const urlParams = new URLSearchParams(window.location.search);
@@ -17,10 +17,9 @@ let woordHistory = [];
 
 // ========== HOOFDPROGRAMMA ==========
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('🎴 oefen.js geladen');
+  console.log('🎴 oefen.js gestart');
 
   if (typeof supabase === 'undefined') {
-    console.error('supabase niet gevonden');
     alert('Fout: Kan geen verbinding maken.');
     return;
   }
@@ -47,8 +46,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     toonKaart(0);
     updateProgress();
   } else {
-    document.getElementById('flashcard').innerHTML = 'Deze lijst is nog leeg! Voeg eerst woorden toe.';
+    document.getElementById('flashcard').innerHTML = 'Deze lijst is leeg! Voeg eerst woorden toe.';
   }
+
+  // Event listeners voor knoppen (als ze bestaan)
+  document.getElementById('goedBtn')?.addEventListener('click', goedAntwoord);
+  document.getElementById('foutBtn')?.addEventListener('click', foutAntwoord);
 });
 
 // ========== FUNCTIES ==========
@@ -57,10 +60,9 @@ async function laadWoorden(token, lijstId) {
     const res = await fetch(`/api/words?listId=${lijstId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error('Woorden niet geladen');
     woorden = await res.json();
     woordHistory = new Array(woorden.length).fill(false);
-    console.log('Woorden geladen:', woorden.length);
   } catch (e) {
     console.error('Fout bij laden woorden:', e);
     showToast('Fout bij laden woorden', 'error');
@@ -79,7 +81,7 @@ async function laadStats(token) {
       document.getElementById('streakDisplay').textContent = stats.streak || 0;
     }
   } catch (e) {
-    console.warn('Fout bij laden stats:', e);
+    console.warn('Stats niet beschikbaar');
   }
 }
 
@@ -102,9 +104,7 @@ async function updateStats(xpGained) {
       document.getElementById('streakDisplay').textContent = stats.streak;
       return stats;
     }
-  } catch (e) {
-    console.warn('Fout bij updaten stats:', e);
-  }
+  } catch (e) {}
 }
 
 function toonKaart(index) {
@@ -132,14 +132,14 @@ window.draaiKaart = function() {
 
 window.volgendeKaart = function() {
   if (woorden.length === 0) return;
-  let nieuweIndex = (huidigeIndex + 1) % woorden.length;
-  toonKaart(nieuweIndex);
+  huidigeIndex = (huidigeIndex + 1) % woorden.length;
+  toonKaart(huidigeIndex);
 }
 
 window.vorigeKaart = function() {
   if (woorden.length === 0) return;
-  let nieuweIndex = (huidigeIndex - 1 + woorden.length) % woorden.length;
-  toonKaart(nieuweIndex);
+  huidigeIndex = (huidigeIndex - 1 + woorden.length) % woorden.length;
+  toonKaart(huidigeIndex);
 }
 
 function updateProgress() {
@@ -151,71 +151,37 @@ function updateProgress() {
 
 function checkSessieVoltooid() {
   if (woordHistory.every(v => v === true)) {
-    toonEindeSessie();
+    document.getElementById('sessieGoed').textContent = goedCount;
+    document.getElementById('sessieFout').textContent = foutCount;
+    document.getElementById('sessieXP').textContent = sessieXP;
+    document.getElementById('sessieModal').style.display = 'block';
   }
 }
 
-function toonEindeSessie() {
-  const modal = document.getElementById('sessieModal');
-  if (!modal) return;
-  document.getElementById('sessieGoed').textContent = goedCount;
-  document.getElementById('sessieFout').textContent = foutCount;
-  document.getElementById('sessieXP').textContent = sessieXP;
-  modal.style.display = 'block';
-}
-
-// Modal sluiten
-document.querySelector('.close')?.addEventListener('click', () => {
-  document.getElementById('sessieModal').style.display = 'none';
-});
-window.addEventListener('click', (e) => {
-  const modal = document.getElementById('sessieModal');
-  if (e.target === modal) modal.style.display = 'none';
-});
-
-// Antwoordknoppen
-document.getElementById('goedBtn').addEventListener('click', async () => {
-  if (woorden.length === 0) return;
-  if (woordHistory[huidigeIndex]) {
-    showToast('Deze heb je al beantwoord!', 'info');
-    return;
-  }
-
+async function goedAntwoord() {
+  if (woorden.length === 0 || woordHistory[huidigeIndex]) return;
   goedCount++;
   sessieXP += 5;
   woordHistory[huidigeIndex] = true;
   updateProgress();
-
-  const stats = await updateStats(5);
-  showToast(stats ? `+5 XP! Totaal: ${stats.xp}` : '+5 XP!', 'success');
-
-  document.getElementById('flashcard').style.transform = 'scale(1.02)';
-  setTimeout(() => document.getElementById('flashcard').style.transform = 'scale(1)', 200);
-
+  await updateStats(5);
+  showToast('+5 XP!', 'success');
   if (huidigeIndex < woorden.length - 1) {
     volgendeKaart();
   } else {
     checkSessieVoltooid();
   }
-});
+}
 
-document.getElementById('foutBtn').addEventListener('click', async () => {
-  if (woorden.length === 0) return;
-  if (woordHistory[huidigeIndex]) {
-    showToast('Deze heb je al beantwoord!', 'info');
-    return;
-  }
-
+async function foutAntwoord() {
+  if (woorden.length === 0 || woordHistory[huidigeIndex]) return;
   foutCount++;
   sessieXP += 1;
   woordHistory[huidigeIndex] = true;
   updateProgress();
-
-  const stats = await updateStats(1);
-  showToast(stats ? `+1 XP! Totaal: ${stats.xp}` : '+1 XP!', 'info');
-
+  await updateStats(1);
+  showToast('+1 XP', 'info');
   if (!toonAntwoord) draaiKaart();
-
   setTimeout(() => {
     if (huidigeIndex < woorden.length - 1) {
       volgendeKaart();
@@ -223,4 +189,14 @@ document.getElementById('foutBtn').addEventListener('click', async () => {
       checkSessieVoltooid();
     }
   }, 1500);
+}
+
+// Modal sluiten
+document.querySelector('.close')?.addEventListener('click', () => {
+  document.getElementById('sessieModal').style.display = 'none';
+});
+window.addEventListener('click', (e) => {
+  if (e.target === document.getElementById('sessieModal')) {
+    document.getElementById('sessieModal').style.display = 'none';
+  }
 });

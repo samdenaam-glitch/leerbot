@@ -4,24 +4,66 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg-gradient-start: #f9e79f;
+  --bg-gradient-end: #f7dc6f;
+  --text-color: #2c3e50;
+  --header-bg: #ffffff;
+  --card-bg: #ffffff;
+  --card-shadow: #c0c0c0;
+  --button-bg: #ff9a3c;
+  --button-shadow: #b85e00;
+  --button-hover: #ffb26b;
+  --lijst-bg: #d4f1f9;
+  --flashcard-bg: #fbf9d3;
+  --flashcard-hover: #ffed9e;
+  --toast-bg: #333333;
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(0, 0, 0, 0.5);
+  --border-radius: 30px;
+  --transition: 0.2s;
+}
+
+body.dark-mode {
+  --bg-gradient-start: #1e2b38;
+  --bg-gradient-end: #2c3e50;
+  --text-color: #ecf0f1;
+  --header-bg: #2c3e50;
+  --card-bg: #34495e;
+  --card-shadow: #1e2b38;
+  --button-bg: #e67e22;
+  --button-shadow: #b85e00;
+  --button-hover: #f39c12;
+  --lijst-bg: #3a4a5c;
+  --flashcard-bg: #4a5b6b;
+  --flashcard-hover: #5d6d7e;
+  --toast-bg: #222222;
+  --modal-bg: #34495e;
+  --modal-overlay: rgba(0, 0, 0, 0.8);
+}
+
 body {
   font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-  background: linear-gradient(145deg, #f9e79f, #f7dc6f);
-  color: #2c3e50;
-  padding: 20px;
+  background: linear-gradient(145deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  color: var(--text-color);
   min-height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  transition: background 0.3s, color 0.3s;
 }
 
 header {
-  background: white;
+  background: var(--header-bg);
   padding: 20px;
-  border-radius: 30px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   margin-bottom: 30px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  transition: background 0.3s;
 }
 
 h1 {
@@ -30,8 +72,13 @@ h1 {
   text-shadow: 2px 2px 0 #b9e6d9;
 }
 
+body.dark-mode h1 {
+  color: #f1c40f;
+  text-shadow: 2px 2px 0 #7f8c8d;
+}
+
 button {
-  background: #ff9a3c;
+  background: var(--button-bg);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -39,51 +86,53 @@ button {
   font-size: 1.2em;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 5px 0 #b85e00;
+  box-shadow: 0 5px 0 var(--button-shadow);
   transition: 0.1s;
   margin: 5px;
 }
 button:hover {
-  background: #ffb26b;
+  background: var(--button-hover);
   transform: translateY(-2px);
-  box-shadow: 0 7px 0 #b85e00;
+  box-shadow: 0 7px 0 var(--button-shadow);
 }
 button:active {
   transform: translateY(5px);
-  box-shadow: 0 2px 0 #b85e00;
+  box-shadow: 0 2px 0 var(--button-shadow);
 }
 
 .card {
-  background: white;
+  background: var(--card-bg);
   padding: 25px;
-  border-radius: 30px;
-  box-shadow: 0 10px 0 #c0c0c0;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 0 var(--card-shadow);
   margin-bottom: 20px;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 .lijst, .woord {
-  background: #d4f1f9;
+  background: var(--lijst-bg);
   padding: 15px;
   border-radius: 20px;
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background 0.3s;
 }
 
 .flashcard {
-  background: #fbf9d3;
+  background: var(--flashcard-bg);
   padding: 40px;
   text-align: center;
   font-size: 2em;
-  border-radius: 30px;
-  box-shadow: 0 15px 0 #c0c0c0;
+  border-radius: var(--border-radius);
+  box-shadow: 0 15px 0 var(--card-shadow);
   margin: 30px 0;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s;
 }
 .flashcard:hover {
-  background: #ffed9e;
+  background: var(--flashcard-hover);
 }
 
 /* Toast notificaties */
@@ -91,11 +140,11 @@ button:active {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #333;
+  background: var(--toast-bg);
   color: white;
   padding: 15px 20px;
   border-radius: 50px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   font-size: 1.1em;
   animation: slideIn 0.3s ease;
@@ -120,16 +169,18 @@ button:active {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.5);
+  background-color: var(--modal-overlay);
 }
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--modal-bg);
   margin: 15% auto;
   padding: 20px;
-  border-radius: 30px;
+  border-radius: var(--border-radius);
   width: 80%;
   max-width: 500px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
 }
 .close {
   color: #aaa;
@@ -144,32 +195,73 @@ button:active {
   text-decoration: none;
   cursor: pointer;
 }
+body.dark-mode .close {
+  color: #ccc;
+}
+body.dark-mode .close:hover {
+  color: white;
+}
 #modalWoordenLijst {
   margin-top: 20px;
   max-height: 300px;
   overflow-y: auto;
 }
 #modalWoordenLijst p {
-  background: #f0f0f0;
+  background: var(--lijst-bg);
   padding: 8px 12px;
   border-radius: 20px;
   margin: 5px 0;
+  transition: background 0.3s;
 }
 
 /* Onboarding */
 .onboarding-card {
-  background: white;
+  background: var(--card-bg);
   padding: 30px;
-  border-radius: 30px;
-  box-shadow: 0 10px 0 #c0c0c0;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 0 var(--card-shadow);
   text-align: center;
   margin: 20px 0;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 .onboarding-card h2 {
   color: #1e6f5c;
   margin-bottom: 15px;
 }
+body.dark-mode .onboarding-card h2 {
+  color: #f1c40f;
+}
 .onboarding-card p {
   font-size: 1.2em;
   margin: 10px 0;
+}
+
+/* Filters op ontdekpagina */
+.filters {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 5px 0 var(--card-shadow);
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  transition: background 0.3s;
+}
+.filters label {
+  font-weight: bold;
+}
+.filters select, .filters input {
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: white;
+  color: #333;
+}
+body.dark-mode .filters select,
+body.dark-mode .filters input {
+  background: #3a4a5c;
+  color: white;
+  border-color: #5d6d7e;
 }

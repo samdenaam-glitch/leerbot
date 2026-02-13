@@ -15,19 +15,30 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Ongeldige token' })
   }
 
-  const { id } = req.query
-  if (!id) {
-    return res.status(400).json({ error: 'ID ontbreekt' })
+  const { id, language, level } = req.query
+
+  // Geval 1: ID is meegegeven → haal woorden van die specifieke lijst op
+  if (id) {
+    const { data: words, error } = await supabase
+      .from('shared_list_words')
+      .select('*')
+      .eq('shared_list_id', id)
+      .order('id')
+
+    if (error) {
+      return res.status(500).json({ error: error.message })
+    }
+    return res.status(200).json(words)
   }
 
-  const { data: words, error } = await supabase
-    .from('shared_list_words')
-    .select('*')
-    .eq('shared_list_id', id)
-    .order('id')
+  // Geval 2: Geen ID → haal alle gedeelde lijsten op (met optionele filters)
+  let query = supabase.from('shared_lists').select('*')
+  if (language) query = query.eq('language', language)
+  if (level) query = query.eq('level', level)
 
+  const { data: lists, error } = await query.order('language').order('level').order('name')
   if (error) {
     return res.status(500).json({ error: error.message })
   }
-  return res.status(200).json(words)
+  return res.status(200).json(lists)
 }

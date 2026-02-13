@@ -6,16 +6,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.location.href = 'index.html'
     return
   }
+
+  // Controleer of de gebruiker admin is
+  const checkRes = await fetch('/api/admin/check', {
+    headers: { 'Authorization': `Bearer ${session.access_token}` }
+  })
+  if (!checkRes.ok) {
+    alert('Geen admin-toegang')
+    window.location.href = 'dashboard.html'
+    return
+  }
+  const checkData = await checkRes.json()
+  if (!checkData.admin) {
+    alert('Geen admin-toegang')
+    window.location.href = 'dashboard.html'
+    return
+  }
+
   currentToken = session.access_token
   document.getElementById('username').textContent = session.user.email
-
-  // Optioneel: extra check op admin-rechten via een eenvoudige API call
-  try {
-    await laadLijsten()
-  } catch (err) {
-    alert('Geen admin-toegang of fout bij laden')
-    window.location.href = 'dashboard.html'
-  }
+  laadLijsten()
 })
 
 document.getElementById('newListForm').addEventListener('submit', async (e) => {
@@ -78,7 +88,6 @@ function toonLijsten(lijsten) {
     `
     container.appendChild(div)
 
-    // Event listener voor bekijk woorden
     div.querySelector('.bekijkWoordenBtn').addEventListener('click', () => {
       const wordsDiv = document.getElementById(`words-${lijst.id}`)
       if (wordsDiv.style.display === 'none') {
@@ -89,14 +98,12 @@ function toonLijsten(lijsten) {
       }
     })
 
-    // Event listener voor verwijder lijst
     div.querySelector('.verwijderLijstBtn').addEventListener('click', async () => {
       if (confirm(`Weet je zeker dat je de lijst "${lijst.name}" wilt verwijderen?`)) {
         await verwijderLijst(lijst.id)
       }
     })
 
-    // Event listener voor nieuw woord formulier
     div.querySelector('.nieuwWoordForm').addEventListener('submit', async (e) => {
       e.preventDefault()
       const source = e.target.querySelector('input:first-child').value.trim()

@@ -9,7 +9,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   document.getElementById('username').textContent = session.user.email
   laadLijsten(session.access_token)
+  checkAdminAndShowButton(session.access_token)   // nieuw
 })
+
+// Nieuwe functie: controleer of de gebruiker admin is en toon knop
+async function checkAdminAndShowButton(token) {
+  const res = await fetch('/api/admin/check', {
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
+  if (res.ok) {
+    const data = await res.json()
+    if (data.admin) {
+      document.getElementById('adminButtonContainer').innerHTML = '<button onclick="window.location=\'admin.html\'" style="background:#333;">🛠️ Admin</button>'
+    }
+  }
+}
 
 document.getElementById('nieuwLijstBtn').addEventListener('click', async () => {
   const naam = prompt('Naam van de nieuwe lijst (bijv. "Frans H3"):')

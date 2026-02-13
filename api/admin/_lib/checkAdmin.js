@@ -1,7 +1,7 @@
 import { supabase } from '../../_lib/supabase.js'
 
 // Vervang dit door jouw e-mailadres (of meerdere)
-const ADMIN_EMAILS = ['jouw-email@example.com']  // ← JOUW E-MAIL HIER
+const ADMIN_EMAILS = ['samdenaam@gmail.com']  // ← JOUW E-MAIL HIER
 
 export async function checkAdmin(req) {
   const authHeader = req.headers.authorization

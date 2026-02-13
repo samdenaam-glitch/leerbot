@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leerbot - Gratis woordjes leren</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>📚 Leerbot.nl</h1>
+        <p>Gratis woordjes leren, net als StudyGo, maar helemaal gratis.</p>
+        <div id="auth-buttons">
+            <button id="login-btn">Inloggen</button>
+            <button id="signup-btn">Account maken</button>
+        </div>
+        <div id="user-info" style="display:none;">
+            Welkom <span id="username"></span>! <button id="logout-btn">Uitloggen</button>
+            <a href="dashboard.html" id="dashboard-link">Mijn woordenlijsten</a>
+        </div>
+    </header>
+    <main>
+        <section>
+            <h2>Zo werkt het</h2>
+            <p>Maak lijsten, voeg woorden toe, en oefen met flashcards.</p>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>

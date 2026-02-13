@@ -95,6 +95,58 @@ function showToast(message, type = 'info') {
 }
 window.showToast = showToast;
 
+// ========== DARK MODE TOGGLE ==========
+function initDarkMode() {
+  // Voorkom dubbele knop
+  if (document.getElementById('darkModeToggle')) return;
+
+  // Maak toggle knop
+  const toggleBtn = document.createElement('button');
+  toggleBtn.id = 'darkModeToggle';
+  toggleBtn.style.marginLeft = '10px';
+  toggleBtn.style.fontSize = '1.2em';
+  toggleBtn.style.padding = '8px 16px';
+  
+  // Bepaal initiële tekst op basis van opgeslagen voorkeur
+  const saved = localStorage.getItem('darkMode');
+  if (saved === 'dark') {
+    document.body.classList.add('dark-mode');
+    toggleBtn.textContent = '☀️';
+  } else {
+    toggleBtn.textContent = '🌙';
+  }
+
+  toggleBtn.onclick = () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('darkMode', isDark ? 'dark' : 'light');
+    toggleBtn.textContent = isDark ? '☀️' : '🌙';
+  };
+
+  // Voeg knop toe aan header (bij user-info of auth-buttons)
+  const header = document.querySelector('header');
+  if (header) {
+    let container = document.getElementById('user-info');
+    if (!container || container.style.display === 'none') {
+      container = document.getElementById('auth-buttons');
+    }
+    if (!container) {
+      // Als geen van beide bestaat, maak een eigen container in de header
+      container = document.createElement('div');
+      header.appendChild(container);
+    }
+    container.appendChild(toggleBtn);
+  }
+}
+
+// Roep dark mode init aan zodra DOM geladen is
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initDarkMode);
+} else {
+  initDarkMode();
+}
+// ========== EINDE DARK MODE ==========
+
 // Globale functies beschikbaar maken (voor onclick in HTML)
 window.login = login
 window.registreer = registreer

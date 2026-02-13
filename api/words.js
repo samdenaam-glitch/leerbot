@@ -51,5 +51,20 @@ export default async function handler(req, res) {
     return res.status(201).json(data)
   }
 
+  // DELETE: woord verwijderen (optioneel, als je dat wilt)
+  if (req.method === 'DELETE') {
+    const { id } = req.query
+    if (!id) return res.status(400).json({ error: 'Geen woord ID opgegeven' })
+    
+    const { error } = await supabase
+      .from('words')
+      .delete()
+      .eq('id', id)
+      .eq('list_id', listId) // veiligheid: alleen als het bij deze lijst hoort
+
+    if (error) return res.status(400).json({ error: error.message })
+    return res.status(204).end()
+  }
+
   return res.status(405).json({ error: 'Method not allowed' })
 }

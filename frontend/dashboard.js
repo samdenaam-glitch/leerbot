@@ -1,6 +1,3 @@
-// Wordt geladen na script.js (dus supabase is al beschikbaar)
-const API_BASE = ''  // leeg = zelfde domein (werkt via Vercel rewrite)
-
 document.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) {
@@ -42,17 +39,16 @@ async function laadLijsten(token) {
   if (lijsten.length === 0) {
     container.innerHTML = `
       <div class="onboarding-card">
-        <h2>👋 Welkom bij Leerbot!</h2>
-        <p>Je hebt nog geen woordenlijsten. Begin met een van deze opties:</p>
-        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-          <button onclick="window.location='ontdek.html'">🌟 Ontdek voorbeeldlijsten</button>
-          <button id="nieuwLijstOnboarding">➕ Maak je eigen lijst</button>
+        <h2>👋 Welkom!</h2>
+        <p>Je hebt nog geen lijsten. Start met een voorbeeld of maak je eigen lijst.</p>
+        <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+          <button onclick="window.location='ontdek.html'" class="btn">🌟 Ontdek voorbeelden</button>
+          <button id="nieuwLijstOnboarding" class="btn secondary">➕ Eigen lijst</button>
         </div>
-        <p style="margin-top: 20px;">Of leer hoe het werkt in <a href="#">de handleiding</a>.</p>
       </div>
-    `;
+    `
     document.getElementById('nieuwLijstOnboarding').addEventListener('click', async () => {
-      const naam = prompt('Naam van de nieuwe lijst (bijv. "Frans H3"):')
+      const naam = prompt('Naam van de nieuwe lijst:')
       if (!naam) return
       const beschrijving = prompt('Korte beschrijving (niet verplicht):', '')
       const { data: { session } } = await supabase.auth.getSession()
@@ -71,15 +67,16 @@ async function laadLijsten(token) {
   }
   lijsten.forEach(lijst => {
     const div = document.createElement('div')
-    div.className = 'lijst'
+    div.className = 'list-card'
     div.innerHTML = `
-      <div>
-        <strong>${lijst.name}</strong><br>
-        <small>${lijst.description || 'geen beschrijving'}</small>
+      <h3>${lijst.name}</h3>
+      <p>${lijst.description || 'Geen beschrijving'}</p>
+      <div class="list-meta">
+        <span>${lijst.woord_count || 0} woorden</span>
       </div>
-      <div>
-        <button onclick="window.location='lijst.html?id=${lijst.id}'">📖 Bekijk</button>
-        <button onclick="window.location='oefen.html?id=${lijst.id}'">🎴 Oefenen</button>
+      <div class="list-actions">
+        <button onclick="window.location='lijst.html?id=${lijst.id}'" class="btn small">📖 Bekijk</button>
+        <button onclick="window.location='oefen.html?id=${lijst.id}'" class="btn small secondary">🎴 Oefenen</button>
       </div>
     `
     container.appendChild(div)

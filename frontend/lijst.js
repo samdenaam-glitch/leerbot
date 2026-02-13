@@ -55,7 +55,7 @@ document.getElementById('voegWoordBtn').addEventListener('click', async () => {
   const bron = document.getElementById('bronWoord').value.trim()
   const doel = document.getElementById('doelWoord').value.trim()
   if (!bron || !doel) {
-    alert('Vul beide woorden in!')
+    showToast('Vul beide woorden in!', 'warning')
     return
   }
   const { data: { session } } = await supabase.auth.getSession()
@@ -71,8 +71,9 @@ document.getElementById('voegWoordBtn').addEventListener('click', async () => {
     document.getElementById('bronWoord').value = ''
     document.getElementById('doelWoord').value = ''
     laadWoorden(session.access_token)
+    showToast('Woord toegevoegd!', 'success')
   } else {
-    alert('Fout bij toevoegen')
+    showToast('Fout bij toevoegen', 'error')
   }
 })
 
@@ -83,6 +84,10 @@ window.verwijderWoord = async function(id) {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${session.access_token}` }
   })
-  if (res.ok) laadWoorden(session.access_token)
-  else alert('Fout bij verwijderen')
+  if (res.ok) {
+    laadWoorden(session.access_token)
+    showToast('Woord verwijderd', 'success')
+  } else {
+    showToast('Fout bij verwijderen', 'error')
+  }
 }

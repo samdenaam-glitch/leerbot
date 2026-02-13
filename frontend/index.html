@@ -3,38 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leerbot - Gratis woordjes leren</title>
+    <title>Leerbot - Speels woordjes leren</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>📚 Leerbot.nl</h1>
-        <div id="auth-buttons">
-            <button onclick="login()">Inloggen</button>
-            <button onclick="registreer()">Account maken</button>
-        </div>
-        <div id="user-info" style="display:none;">
-            Hoi <span id="username"></span>! 
-            <button onclick="logout()">Uitloggen</button>
-            <a href="dashboard.html"><button>📋 Mijn lijsten</button></a>
-        </div>
-    </header>
-    <main>
-        <div class="card">
-            <h2>👋 Welkom bij Leerbot!</h2>
-            <p>Met Leerbot leer je supersnel woordjes. Maak je eigen lijsten of gebruik die van je klas.</p>
-            <p style="font-size:1.5em;">⭐ Helemaal gratis ⭐</p>
-        </div>
-        <div class="card">
-            <h3>Zo werkt het:</h3>
-            <ol style="margin-left:20px;">
-                <li>Maak een gratis account</li>
-                <li>Maak een lijst (bijv. 'Frans hoofdstuk 1')</li>
-                <li>Voeg woordjes toe</li>
-                <li>Oefen met de flashcards!</li>
-            </ol>
-        </div>
-    </main>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">📚 Leerbot <span>NL</span></a>
+            <div class="nav-links">
+                <div id="auth-buttons">
+                    <button onclick="login()" class="btn outline small">Inloggen</button>
+                    <button onclick="registreer()" class="btn small secondary">Gratis starten</button>
+                </div>
+                <div id="user-info" style="display:none;">
+                    <span class="user-email" id="username"></span>
+                    <button onclick="logout()" class="btn outline small">Uitloggen</button>
+                    <a href="dashboard.html" class="btn small">Mijn lijsten</a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="card" style="text-align: center; padding: 60px 20px;">
+                <div class="mascot">🦉</div>
+                <h1 style="font-size: 48px; color: var(--primary);">Leer spelenderwijs</h1>
+                <p style="font-size: 20px; max-width: 600px; margin: 20px auto;">Maak je eigen woordenlijsten of gebruik voorbeelden. Oefen met slimme flashcards en word een taalheld!</p>
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="registreer()" class="btn" style="font-size: 20px; padding: 16px 32px;">🎉 Gratis starten</button>
+                    <button onclick="window.location='ontdek.html'" class="btn outline" style="font-size: 20px; padding: 16px 32px;">🌟 Ontdek lijsten</button>
+                </div>
+            </div>
+
+            <div class="grid" style="margin-top: 40px;">
+                <div class="card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                    <h3>Eigen lijsten</h3>
+                    <p>Maak lijsten voor elk vak: Frans, Engels, Duits, of wat je maar wilt.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🌟</div>
+                    <h3>Voorbeelden</h3>
+                    <p>Gebruik kant-en-klare lijsten van anderen om snel te beginnen.</p>
+                </div>
+                <div class="card">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🎴</div>
+                    <h3>Flashcards</h3>
+                    <p>Oefen waar en wanneer je wilt, met onze slimme kaartjes.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer style="text-align: center; margin: 40px 0 20px; color: var(--text-light);">
+            © 2026 Leerbot.nl • Gratis voor altijd
+        </footer>
+    </div>
+
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="script.js"></script>
 </body>

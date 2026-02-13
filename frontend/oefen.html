@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Oefenen - Leerbot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🎴 Oefenen</h1>
+        <div>
+            <span id="username"></span>
+            <button onclick="logout()">Uitloggen</button>
+            <button onclick="window.location='lijst.html?id='+getLijstId()">← Naar lijst</button>
+        </div>
+    </header>
+    <main>
+        <div id="card" class="flashcard" onclick="draaiKaart()">
+            <div id="voorkant">Klik om te beginnen</div>
+            <div id="achterkant" style="display:none;"></div>
+        </div>
+        <div style="display:flex; justify-content:center; gap:20px;">
+            <button onclick="vorigeKaart()">← Vorige</button>
+            <button onclick="volgendeKaart()">Volgende →</button>
+        </div>
+        <p id="teller"></p>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+    <script src="oefen.js"></script>
+</body>
+</html>

@@ -19,7 +19,7 @@ document.getElementById('filterBtn').addEventListener('click', () => {
 })
 
 async function laadLijsten(token) {
-  let url = '/api/shared-lists?'
+  let url = '/api/shared-list?'
   if (currentFilter.language) url += `language=${currentFilter.language}&`
   if (currentFilter.level) url += `level=${currentFilter.level}`
 

@@ -1,13 +1,23 @@
 let lijstId = null
+
+window.getLijstId = function() {
+  if (!lijstId) {
+    const urlParams = new URLSearchParams(window.location.search)
+    lijstId = urlParams.get('id')
+  }
+  return lijstId
+}
+
 let woorden = []
 let huidigeIndex = 0
 let toonAntwoord = false
 let goedCount = 0
 let foutCount = 0
 let sessieXP = 0
-let woordHistory = [] // om bij te houden welke woorden al zijn gezien
+let woordHistory = []
 
 document.addEventListener('DOMContentLoaded', async () => {
+  console.log('oefen.js loaded')
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) {
     window.location.href = 'index.html'
@@ -23,8 +33,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   document.getElementById('username').textContent = session.user.email
-  await laadStats(session.access_token) // laad huidige XP, level, streak
-  await laadWoorden(session.access_token)
+  try {
+    await laadStats(session.access_token)
+    await laadWoorden(session.access_token)
+  } catch (e) {
+    console.error('Fout bij laden:', e)
+    showToast('Fout bij laden van oefening', 'error')
+  }
   if (woorden.length > 0) {
     toonKaart(0)
     updateProgress()
@@ -33,14 +48,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 })
 
-window.getLijstId = () => lijstId
-
 async function laadWoorden(token) {
   const res = await fetch(`/api/words?listId=${lijstId}`, {
     headers: { 'Authorization': `Bearer ${token}` }
   })
+  if (!res.ok) {
+    throw new Error('Kan woorden niet laden')
+  }
   woorden = await res.json()
-  // Initialiseer history: false = nog niet beantwoord
   woordHistory = new Array(woorden.length).fill(false)
 }
 
@@ -54,9 +69,11 @@ async function laadStats(token) {
       document.getElementById('xpDisplay').textContent = stats.xp || 0
       document.getElementById('levelDisplay').textContent = stats.level || 1
       document.getElementById('streakDisplay').textContent = stats.streak || 0
+    } else {
+      console.warn('Stats endpoint niet bereikbaar, gebruik standaardwaarden')
     }
   } catch (e) {
-    console.error('Fout bij laden stats', e)
+    console.warn('Fout bij laden stats, negeer', e)
   }
 }
 
@@ -80,7 +97,7 @@ async function updateStats(xpGained) {
       return stats
     }
   } catch (e) {
-    console.error('Fout bij updaten stats', e)
+    console.warn('Fout bij updaten stats', e)
   }
 }
 
@@ -119,7 +136,6 @@ window.vorigeKaart = function() {
   toonKaart(nieuweIndex)
 }
 
-// Hulpfunctie om voortgangsbalk bij te werken
 function updateProgress() {
   const beantwoord = woordHistory.filter(v => v).length
   const totaal = woorden.length
@@ -128,7 +144,6 @@ function updateProgress() {
   document.getElementById('progressFill').style.width = percentage + '%'
 }
 
-// Check of alle woorden zijn beantwoord
 function checkSessieVoltooid() {
   if (woordHistory.every(v => v === true)) {
     toonEindeSessie()
@@ -137,6 +152,7 @@ function checkSessieVoltooid() {
 
 function toonEindeSessie() {
   const modal = document.getElementById('sessieModal')
+  if (!modal) return
   document.getElementById('sessieGoed').textContent = goedCount
   document.getElementById('sessieFout').textContent = foutCount
   document.getElementById('sessieXP').textContent = sessieXP
@@ -144,9 +160,12 @@ function toonEindeSessie() {
 }
 
 // Sluit modal
-document.querySelector('.close').addEventListener('click', () => {
-  document.getElementById('sessieModal').style.display = 'none'
-})
+const closeModal = document.querySelector('.close')
+if (closeModal) {
+  closeModal.addEventListener('click', () => {
+    document.getElementById('sessieModal').style.display = 'none'
+  })
+}
 window.addEventListener('click', (e) => {
   const modal = document.getElementById('sessieModal')
   if (e.target === modal) {
@@ -154,7 +173,6 @@ window.addEventListener('click', (e) => {
   }
 })
 
-// Antwoordknoppen
 document.getElementById('goedBtn').addEventListener('click', async () => {
   if (woorden.length === 0) return
   if (woordHistory[huidigeIndex]) {
@@ -167,23 +185,21 @@ document.getElementById('goedBtn').addEventListener('click', async () => {
   woordHistory[huidigeIndex] = true
   updateProgress()
 
-  // Geef 5 XP
   const stats = await updateStats(5)
   if (stats) {
     showToast(`+5 XP! Totaal: ${stats.xp}`, 'success')
+  } else {
+    showToast(`+5 XP!`, 'success')
   }
 
-  // Visuele feedback: laat even het juiste antwoord zien? Al gedaan via draaien? Laten we een korte animatie toevoegen
   document.getElementById('flashcard').style.transform = 'scale(1.02)'
   setTimeout(() => {
     document.getElementById('flashcard').style.transform = 'scale(1)'
   }, 200)
 
-  // Ga naar volgende kaart (automatisch)
   if (huidigeIndex < woorden.length - 1) {
     volgendeKaart()
   } else {
-    // Als laatste, check of sessie klaar is
     checkSessieVoltooid()
   }
 })
@@ -196,22 +212,21 @@ document.getElementById('foutBtn').addEventListener('click', async () => {
   }
 
   foutCount++
-  sessieXP += 1 // 1 XP voor moeite
+  sessieXP += 1
   woordHistory[huidigeIndex] = true
   updateProgress()
 
-  // Geef 1 XP
   const stats = await updateStats(1)
   if (stats) {
+    showToast(`+1 XP voor doorzettingsvermogen! Totaal: ${stats.xp}`, 'info')
+  } else {
     showToast(`+1 XP voor doorzettingsvermogen!`, 'info')
   }
 
-  // Toon antwoord even (draai kaart)
   if (!toonAntwoord) {
-    draaiKaart() // toon achterkant
+    draaiKaart()
   }
 
-  // Ga na 1.5 seconde automatisch verder
   setTimeout(() => {
     if (huidigeIndex < woorden.length - 1) {
       volgendeKaart()

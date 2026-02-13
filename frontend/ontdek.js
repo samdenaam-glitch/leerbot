@@ -19,7 +19,7 @@ document.getElementById('filterBtn').addEventListener('click', () => {
 })
 
 async function laadLijsten(token) {
-  let url = '/api/shared-list?'
+  let url = '/api/shared-lists?'
   if (currentFilter.language) url += `language=${currentFilter.language}&`
   if (currentFilter.level) url += `level=${currentFilter.level}`
 
@@ -27,7 +27,7 @@ async function laadLijsten(token) {
     headers: { 'Authorization': `Bearer ${token}` }
   })
   if (!res.ok) {
-    alert('Fout bij laden van voorbeeldlijsten')
+    showToast('Fout bij laden van voorbeeldlijsten', 'error')
     return
   }
   const lijsten = await res.json()
@@ -81,30 +81,54 @@ async function kopieerLijst(sharedListId, token) {
   })
   if (res.ok) {
     const data = await res.json()
-    alert('Lijst gekopieerd! Je kunt hem nu vinden in "Mijn lijsten".')
-    // Optioneel: direct naar de nieuwe lijst gaan
+    showToast('Lijst gekopieerd! Je kunt hem nu vinden in "Mijn lijsten".', 'success')
     if (confirm('Wil je de lijst nu bekijken?')) {
       window.location.href = `lijst.html?id=${data.listId}`
     }
   } else {
     const err = await res.json()
-    alert('Fout bij kopiëren: ' + (err.error || 'Onbekende fout'))
+    showToast('Fout bij kopiëren: ' + (err.error || 'Onbekende fout'), 'error')
   }
 }
 
 async function toonWoorden(sharedListId, token) {
-  const res = await fetch(`/api/shared-list?id=${sharedListId}`, {
+  const res = await fetch(`/api/shared-lists/${sharedListId}`, {
     headers: { 'Authorization': `Bearer ${token}` }
   })
   if (!res.ok) {
-    alert('Kan woorden niet laden')
+    showToast('Kan woorden niet laden', 'error')
     return
   }
   const woorden = await res.json()
-  // Toon een simpele popup of modal (voor nu een alert, maar beter is een modal)
-  let bericht = 'Woorden in deze lijst:\n'
-  woorden.forEach(w => {
-    bericht += `${w.source_word} = ${w.target_word}\n`
-  })
-  alert(bericht)
+  const modal = document.getElementById('woordModal')
+  const lijstDiv = document.getElementById('modalWoordenLijst')
+  lijstDiv.innerHTML = ''
+  if (woorden.length === 0) {
+    lijstDiv.innerHTML = '<p>Deze lijst heeft nog geen woorden.</p>'
+  } else {
+    woorden.forEach(w => {
+      const p = document.createElement('p')
+      p.textContent = `${w.source_word} = ${w.target_word}`
+      lijstDiv.appendChild(p)
+    })
+  }
+  modal.style.display = 'block'
 }
+
+// Sluit modal als op de X wordt geklikt
+document.addEventListener('DOMContentLoaded', () => {
+  const closeBtn = document.querySelector('.close')
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      document.getElementById('woordModal').style.display = 'none'
+    })
+  }
+})
+
+// Sluit modal als buiten de content wordt geklikt
+window.addEventListener('click', (e) => {
+  const modal = document.getElementById('woordModal')
+  if (e.target === modal) {
+    modal.style.display = 'none'
+  }
+})

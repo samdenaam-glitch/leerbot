@@ -1,3 +1,18 @@
+:root {
+  --primary: #4361ee;
+  --primary-light: #4895ef;
+  --secondary: #f72585;
+  --success: #4cc9f0;
+  --warning: #f8961e;
+  --danger: #f94144;
+  --dark: #2b2d42;
+  --light: #f8f9fa;
+  --gray: #adb5bd;
+  --white: #ffffff;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --border-radius: 20px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,83 +20,196 @@
 }
 
 body {
-  font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-  background: linear-gradient(145deg, #f9e79f, #f7dc6f);
-  color: #2c3e50;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--dark);
   padding: 20px;
   min-height: 100vh;
 }
 
 header {
-  background: white;
-  padding: 20px;
-  border-radius: 30px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 20px 30px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
   margin-bottom: 30px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 h1 {
-  font-size: 2.5em;
-  color: #1e6f5c;
-  text-shadow: 2px 2px 0 #b9e6d9;
+  font-size: 2.2rem;
+  font-weight: 600;
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 button {
-  background: #ff9a3c;
-  color: white;
+  background: var(--primary);
+  color: var(--white);
   border: none;
-  padding: 12px 24px;
+  padding: 12px 28px;
   border-radius: 50px;
-  font-size: 1.2em;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 5px 0 #b85e00;
-  transition: 0.1s;
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
   margin: 5px;
+  letter-spacing: 0.5px;
 }
+
 button:hover {
-  background: #ffb26b;
+  background: var(--primary-light);
   transform: translateY(-2px);
-  box-shadow: 0 7px 0 #b85e00;
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
 }
+
 button:active {
-  transform: translateY(5px);
-  box-shadow: 0 2px 0 #b85e00;
+  transform: translateY(1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+button.secondary {
+  background: var(--secondary);
+}
+
+button.success {
+  background: var(--success);
+  color: var(--dark);
+}
+
+button.warning {
+  background: var(--warning);
+}
+
+button.danger {
+  background: var(--danger);
 }
 
 .card {
-  background: white;
+  background: var(--white);
   padding: 25px;
-  border-radius: 30px;
-  box-shadow: 0 10px 0 #c0c0c0;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
   margin-bottom: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .lijst, .woord {
-  background: #d4f1f9;
-  padding: 15px;
-  border-radius: 20px;
+  background: var(--light);
+  padding: 15px 20px;
+  border-radius: 15px;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+
+.lijst:hover, .woord:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.flashcard {
+  background: linear-gradient(145deg, var(--white), #f0f0f0);
+  padding: 50px;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 600;
+  border-radius: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  margin: 30px 0;
+  cursor: pointer;
+  transition: 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.flashcard:hover {
+  transform: scale(1.02);
+  box-shadow: 0 30px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Admin-specifieke stijlen */
+.admin-section {
+  background: linear-gradient(135deg, #2b3a55, #1d2b3f);
+  color: var(--white);
+  padding: 25px;
+  border-radius: var(--border-radius);
+  margin-bottom: 30px;
+  box-shadow: var(--shadow);
+}
+
+.admin-section h2 {
+  color: var(--white);
+  margin-bottom: 15px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 10px;
+}
+
+.admin-section input, .admin-section select {
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: none;
+  margin: 5px;
+  font-size: 1rem;
+  width: calc(100% - 20px);
+  max-width: 300px;
+}
+
+.lijst-beheer {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.lijst-beheer h3 {
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.woord-item {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin-bottom: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.flashcard {
-  background: #fbf9d3;
-  padding: 40px;
-  text-align: center;
-  font-size: 2em;
-  border-radius: 30px;
-  box-shadow: 0 15px 0 #c0c0c0;
-  margin: 30px 0;
-  cursor: pointer;
-  transition: 0.2s;
+.woord-item button {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  background: var(--danger);
 }
-.flashcard:hover {
-  background: #ffed9e;
+
+/* Responsive */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+  h1 {
+    font-size: 1.8rem;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+  .flashcard {
+    font-size: 1.8rem;
+    padding: 30px;
+  }
 }

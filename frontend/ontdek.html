@@ -4,45 +4,51 @@
     <meta charset="UTF-8">
     <title>Ontdek voorbeeldlijsten - Leerbot</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>🌟 Ontdek voorbeeldlijsten</h1>
-        <div>
-            <span id="username"></span>
-            <button onclick="logout()">Uitloggen</button>
-            <button onclick="window.location='dashboard.html'">← Mijn lijsten</button>
-        </div>
-    </header>
-    <main>
-        <div class="filters">
-            <label for="taalFilter">Taal:</label>
-            <select id="taalFilter">
-                <option value="">Alle talen</option>
-                <option value="en">Engels</option>
-                <option value="fr">Frans</option>
-                <option value="de">Duits</option>
-            </select>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">📚 Leerbot</a>
+            <div class="nav-links">
+                <span class="user-email" id="username"></span>
+                <a href="dashboard.html" class="btn outline small">Mijn lijsten</a>
+                <button onclick="logout()" class="btn outline small">Uitloggen</button>
+            </div>
+        </header>
 
-            <label for="niveauFilter">Niveau:</label>
-            <select id="niveauFilter">
-                <option value="">Alle niveaus</option>
-                <option value="A1">A1 (beginner)</option>
-                <option value="A2">A2 (vervolg)</option>
-            </select>
+        <main>
+            <h1>🌟 Ontdek voorbeeldlijsten</h1>
 
-            <button id="filterBtn">Filteren</button>
-        </div>
+            <div class="filters">
+                <label for="taalFilter">Taal:</label>
+                <select id="taalFilter">
+                    <option value="">Alle talen</option>
+                    <option value="en">Engels</option>
+                    <option value="fr">Frans</option>
+                    <option value="de">Duits</option>
+                </select>
 
-        <div id="lijstenContainer" class="lijsten-grid"></div>
-    </main>
+                <label for="niveauFilter">Niveau:</label>
+                <select id="niveauFilter">
+                    <option value="">Alle niveaus</option>
+                    <option value="A1">A1 (beginner)</option>
+                    <option value="A2">A2 (vervolg)</option>
+                </select>
 
-    <!-- Modal voor woordenlijst -->
-    <div id="woordModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Woorden in deze lijst</h3>
-            <div id="modalWoordenLijst"></div>
+                <button id="filterBtn" class="btn small">Filteren</button>
+            </div>
+
+            <div id="lijstenContainer" class="grid"></div>
+        </main>
+
+        <!-- Modal -->
+        <div id="woordModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Woorden in deze lijst</h3>
+                <div id="modalWoordenLijst"></div>
+            </div>
         </div>
     </div>
 

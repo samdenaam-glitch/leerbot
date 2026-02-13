@@ -9,21 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   document.getElementById('username').textContent = session.user.email
   laadLijsten(session.access_token)
-  checkAdminAndShowButton(session.access_token)   // nieuw
 })
-
-// Nieuwe functie: controleer of de gebruiker admin is en toon knop
-async function checkAdminAndShowButton(token) {
-  const res = await fetch('/api/admin/check', {
-    headers: { 'Authorization': `Bearer ${token}` }
-  })
-  if (res.ok) {
-    const data = await res.json()
-    if (data.admin) {
-      document.getElementById('adminButtonContainer').innerHTML = '<button onclick="window.location=\'admin.html\'" style="background:#333;">🛠️ Admin</button>'
-    }
-  }
-}
 
 document.getElementById('nieuwLijstBtn').addEventListener('click', async () => {
   const naam = prompt('Naam van de nieuwe lijst (bijv. "Frans H3"):')
@@ -39,7 +25,7 @@ document.getElementById('nieuwLijstBtn').addEventListener('click', async () => {
     body: JSON.stringify({ name: naam, description: beschrijving })
   })
   if (res.ok) laadLijsten(session.access_token)
-  else alert('Fout bij aanmaken')
+  else showToast('Fout bij aanmaken', 'error')
 })
 
 async function laadLijsten(token) {
@@ -47,14 +33,40 @@ async function laadLijsten(token) {
     headers: { 'Authorization': `Bearer ${token}` }
   })
   if (!res.ok) {
-    alert('Kan lijsten niet laden')
+    showToast('Kan lijsten niet laden', 'error')
     return
   }
   const lijsten = await res.json()
   const container = document.getElementById('lijstenContainer')
   container.innerHTML = ''
   if (lijsten.length === 0) {
-    container.innerHTML = '<p>Je hebt nog geen lijsten. Maak er een!</p>'
+    container.innerHTML = `
+      <div class="onboarding-card">
+        <h2>👋 Welkom bij Leerbot!</h2>
+        <p>Je hebt nog geen woordenlijsten. Begin met een van deze opties:</p>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button onclick="window.location='ontdek.html'">🌟 Ontdek voorbeeldlijsten</button>
+          <button id="nieuwLijstOnboarding">➕ Maak je eigen lijst</button>
+        </div>
+        <p style="margin-top: 20px;">Of leer hoe het werkt in <a href="#">de handleiding</a>.</p>
+      </div>
+    `;
+    document.getElementById('nieuwLijstOnboarding').addEventListener('click', async () => {
+      const naam = prompt('Naam van de nieuwe lijst (bijv. "Frans H3"):')
+      if (!naam) return
+      const beschrijving = prompt('Korte beschrijving (niet verplicht):', '')
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/lists', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ name: naam, description: beschrijving })
+      })
+      if (res.ok) laadLijsten(session.access_token)
+      else showToast('Fout bij aanmaken', 'error')
+    })
     return
   }
   lijsten.forEach(lijst => {
